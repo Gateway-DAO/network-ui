@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode } from 'react';
 
-import { Stack } from '@mui/system';
+import { Stack } from '@mui/material';
 
 import DashboardPage from './dashboard-page';
 import Logo from './logo/logo';

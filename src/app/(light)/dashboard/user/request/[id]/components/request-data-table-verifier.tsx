@@ -1,7 +1,7 @@
 import { DataModel, DataResourceStatus } from '@/services/protocol/types';
 import { PartialDeep } from 'type-fest';
 
-import { Stack } from '@mui/system';
+import { Stack } from '@mui/material';
 
 import RequestDataVerifierView from './request-data-verifier';
 import { addDataModelDataToSchema } from './utils';

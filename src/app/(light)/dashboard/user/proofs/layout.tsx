@@ -11,7 +11,7 @@ import {
   NEGATIVE_CONTAINER_PX,
 } from '@/theme/config/style-tokens';
 
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 
 export default function DataProofsLayout({ children }: PropsWithChildren) {
   return (

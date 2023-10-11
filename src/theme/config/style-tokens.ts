@@ -1,4 +1,4 @@
-import { SxProps } from '@mui/system';
+import { SxProps } from '@mui/material';
 
 import { BreakpointsValue } from '../types';
 

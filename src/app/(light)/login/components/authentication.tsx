@@ -17,7 +17,7 @@ export function Authentication() {
   const { step, setStepState } = useLoginStepState();
 
   if (step === 'completed') {
-    redirect(routes.testPage);
+    redirect(routes.dashboardUserHome);
   }
 
   if (step === 'verify-email-login-code') {

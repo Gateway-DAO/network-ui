@@ -1,5 +1,4 @@
-import { SxProps } from '@mui/material';
-import { Breakpoint } from '@mui/system';
+import { SxProps, Breakpoint } from '@mui/material';
 
 import { GatewayTheme } from './theme';
 

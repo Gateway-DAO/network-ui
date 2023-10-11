@@ -3,7 +3,7 @@ import { PropsWithChildren, ReactNode } from 'react';
 
 import { CONTAINER_PX } from '@/theme/config/style-tokens';
 
-import { Stack } from '@mui/system';
+import { Stack } from '@mui/material';
 
 import AuthComponent from '../auth-component/auth-component';
 import Menu from './menu';

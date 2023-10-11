@@ -19,8 +19,7 @@ import { useToggle } from '@react-hookz/web/cjs/useToggle';
 import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 
-import { Box, Divider, Typography } from '@mui/material';
-import { Stack } from '@mui/system';
+import { Box, Divider, Typography, Stack } from '@mui/material';
 
 import AddEmail from './account-sections/add-email/add-email';
 import { DeactivateGatewayId } from './account-sections/deactivate-gateway-id';

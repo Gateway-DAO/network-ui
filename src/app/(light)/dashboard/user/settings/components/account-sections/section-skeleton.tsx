@@ -1,5 +1,4 @@
-import { Divider, Skeleton } from '@mui/material';
-import { Stack } from '@mui/system';
+import { Divider, Skeleton, Stack } from '@mui/material';
 
 export default function SectionSkeleton() {
   return (

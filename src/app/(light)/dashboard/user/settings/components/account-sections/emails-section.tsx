@@ -8,8 +8,8 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  Stack,
 } from '@mui/material';
-import { Stack } from '@mui/system';
 
 import AliasMenuButton from '../alias-menu-button';
 import SectionSkeleton from './section-skeleton';

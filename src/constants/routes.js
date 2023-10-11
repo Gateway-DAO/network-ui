@@ -1,6 +1,7 @@
 const routes = {
   home: '/',
   auth: '/login',
+  testPage: '/test',
   dashboardUserHome: '/dashboard/user',
   dashboardUserAsset: (pdaId) => `/dashboard/user/asset/${pdaId}`,
   dashboardOrgAsset: (org, pdaId) => `/dashboard/org/${org}/asset/${pdaId}`,

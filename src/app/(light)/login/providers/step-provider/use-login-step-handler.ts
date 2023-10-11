@@ -18,7 +18,7 @@ export default function useLoginStepHandler() {
     switch (step) {
       case 'completed':
         const callbackUrl = searchParams.get('callbackUrl');
-        router.push(callbackUrl ?? routes.dashboardUserHome);
+        router.push(callbackUrl ?? routes.testPage);
         break;
 
       default:

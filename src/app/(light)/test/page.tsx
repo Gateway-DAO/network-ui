@@ -1,7 +1,12 @@
 import { getGtwServerSession } from '@/services/next-auth/get-gtw-server-session';
 
-export default async function TestPage() {
-  const session = await getGtwServerSession();
+import DashboardUserReceivedProofs from '../dashboard/user/proofs/received/page';
 
-  return <>Watf {JSON.stringify(session)}</>;
-}
+const Page = DashboardUserReceivedProofs;
+
+export default Page;
+
+// export default async function TestPage() {
+
+//   return <DashboardUser/>;
+// }

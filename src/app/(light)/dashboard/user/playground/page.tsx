@@ -1,3 +1,5 @@
+import { Metadata } from 'next';
+
 import TitleLayout from '@/components/title-layout/title-layout';
 import { playground } from '@/locale/en/playground';
 

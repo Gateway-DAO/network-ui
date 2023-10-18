@@ -2,7 +2,6 @@
 import { useRef, useEffect } from 'react';
 
 import Wrapper from '@/app/(landing)/components/wrapper';
-import { useLenisS } from '@/app/(landing)/libs/lenis-provider';
 import { splitSpans } from '@/app/(landing)/utils/dom';
 import { joinClasses } from '@/app/(landing)/utils/function';
 import { useLenis } from '@studio-freight/react-lenis';
@@ -13,20 +12,50 @@ import styles from './pdas.module.scss';
 export default function Pdas() {
   // Refs for DOM elements
   const sectionRef = useRef<HTMLElement>(null);
+  const firstRenderRef = useRef(true);
   const linesParentRef = useRef<SVGGElement>(null);
   const logoBackgroundRef = useRef<SVGPathElement>(null);
   const logoContainerRef = useRef<SVGPathElement>(null);
   const logoRef = useRef<SVGPathElement>(null);
   const logoTextRef = useRef<SVGSVGElement>(null);
   const textPdasRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const textContentPdasRefs = useRef<string[]>([]);
   const pdasLogoContainerRef = useRef<HTMLDivElement>(null);
   const textPdasParagraphRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const slashRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const lenis = useLenisS();
   const tlRef = useRef<gsap.core.Timeline>();
 
-  useLenis(({ scroll }) => {
-    if (!sectionRef.current) return;
+  const lenis = useLenis(({ scroll }) => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+
+      gsap.delayedCall(0.4, () => {
+        setTimelineProgress(scroll);
+        gsap.to(sectionRef.current, { autoAlpha: 1 });
+      });
+      return;
+    }
+
+    setTimelineProgress(scroll);
+  });
+
+  // Animation setup using useEffect
+  useEffect(() => {
+    createAnimation();
+
+    window.addEventListener('resize', reCalc);
+
+    // Set second logo text bounds
+    gsap.delayedCall(0.2, setLogoTextBounds);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', reCalc);
+    };
+  }, []);
+
+  const setTimelineProgress = (scroll: number) => {
+    if (!sectionRef.current || !tlRef.current) return;
 
     const offsetTop =
       sectionRef.current.offsetTop - window.innerHeight / 2 + 200;
@@ -35,27 +64,39 @@ export default function Pdas() {
     const progress = scrollSection / (sectionHeight - window.innerHeight);
 
     if (progress >= 0 && progress <= 1) {
-      tlRef.current?.progress(progress);
+      tlRef.current.progress(progress);
     } else if (progress < 0) {
-      tlRef.current?.progress(0);
+      tlRef.current.progress(0);
     } else {
-      tlRef.current?.progress(1);
+      tlRef.current.progress(1);
     }
-  });
+  };
 
-  // Animation setup using useEffect
-  useEffect(() => {
+  const reCalc = () => {
+    if (!tlRef.current) return;
+
+    tlRef.current.progress(0);
+    tlRef.current.kill();
+
+    if (textContentPdasRefs.current.length) {
+      textContentPdasRefs.current.forEach((content, index) => {
+        if (!textPdasRefs.current[index]) return;
+
+        textPdasRefs.current[index]!.innerHTML = content;
+      });
+    }
+
+    setLogoTextBounds();
     createAnimation();
-
-    // Scroll event handling
-    // Set second logo text bounds
-    gsap.delayedCall(0.3, setLogoTextBounds);
-    gsap.to(sectionRef.current, { autoAlpha: 1 });
-  }, [lenis]);
+    gsap.delayedCall(0.1, () => {
+      setTimelineProgress(lenis?.scroll || 0);
+    });
+  };
 
   const createAnimation = () => {
-    if (!linesParentRef.current || !logoContainerRef.current)
-      return gsap.timeline();
+    if (!linesParentRef.current || !logoContainerRef.current) return;
+
+    if (tlRef.current) tlRef.current.kill();
 
     const lines = linesParentRef.current.querySelectorAll('path');
     const boundsLogo = logoContainerRef.current.getBoundingClientRect();
@@ -70,7 +111,7 @@ export default function Pdas() {
     tlRef.current?.to(logoBackgroundRef.current, { autoAlpha: 1 });
     tlRef.current?.fromTo(
       logoRef.current,
-      { y: '-1rek' },
+      { y: `-1rem` },
       { autoAlpha: 1, y: 0 },
       '-=0.3'
     );
@@ -97,7 +138,11 @@ export default function Pdas() {
     tlRef.current?.to(pdasLogoContainerRef.current, { y: '-7.3rem' }, '<');
 
     textPdasRefs.current.forEach((element, index) => {
-      if (!element) return;
+      if (!element || !tlRef.current) return;
+
+      if (!textContentPdasRefs.current[index]) {
+        textContentPdasRefs.current[index] = element.textContent as string;
+      }
 
       splitSpans(element, '', () => {
         const parent = element.parentNode as HTMLParagraphElement;
@@ -129,7 +174,7 @@ export default function Pdas() {
           {
             xPercent: 0,
             left: 0,
-            y: '-27.3rem',
+            y: `-27.3rem`,
             duration: 0.8,
           },
           '<'
@@ -140,7 +185,7 @@ export default function Pdas() {
         const x = paragraphBounds.left - texPdaBounds.left;
         tlRef.current?.to(
           textPdasParagraphRefs.current,
-          { x, y: '-23rem', duration: 0.8 },
+          { x, y: `-23rem`, duration: 0.8 },
           '-=0.6'
         );
         tlRef.current?.set(textPdasParagraphRefs.current, {
@@ -158,6 +203,8 @@ export default function Pdas() {
   // Function to set logo text bounds
   const setLogoTextBounds = () => {
     if (!logoTextRef.current || !logoContainerRef.current) return;
+
+    logoTextRef.current.removeAttribute('style');
 
     const logoBounds = logoContainerRef.current.getBoundingClientRect();
     const logoTextBounds = logoTextRef.current.getBoundingClientRect();

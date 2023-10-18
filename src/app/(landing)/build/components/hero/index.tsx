@@ -4,6 +4,8 @@ import Wrapper from '@/app/(landing)/components/wrapper';
 import { joinClasses } from '@/app/(landing)/utils/function';
 import GTWLink from '@/components/gtw-link';
 import Slider from 'react-slick';
+import useHeaderVariantDetection from '@/app/(landing)/hooks/use-header-variant-detection';
+import { useRef } from 'react';
 
 import styles from './hero.module.scss';
 
@@ -53,6 +55,10 @@ const Box = ({ type }: { type: 'desktop' | 'mobile' }) => {
 };
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useHeaderVariantDetection(sectionRef, 'light');
+
   const settings = {
     arrows: false,
     infinite: false,
@@ -62,7 +68,7 @@ export default function Hero() {
   };
 
   return (
-    <section className={styles.element}>
+    <section className={styles.element} ref={sectionRef}>
       <Wrapper className={styles.wrapper_head}>
         <div className={styles.column}>
           <h1 className={styles.title}>

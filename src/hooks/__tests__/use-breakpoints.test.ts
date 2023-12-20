@@ -9,7 +9,7 @@ jest.mock('@mui/system/useTheme', () => jest.fn());
 
 jest.mock('@mui/material/useMediaQuery', () => jest.fn());
 
-describe('useBreakpoints', () => {
+describe('Hook: useBreakpoints', () => {
   beforeAll(() => {
     (useTheme as jest.Mock).mockReturnValue({
       breakpoints: {

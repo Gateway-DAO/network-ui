@@ -46,6 +46,9 @@ export function useCountdown({
     } else {
       setCountdown({ time: 30, counting: false });
     }
+    return () => {
+      reset();
+    };
   }, [trigger]);
 
   return countdown;

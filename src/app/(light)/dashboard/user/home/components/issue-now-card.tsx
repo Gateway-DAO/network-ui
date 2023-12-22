@@ -20,6 +20,7 @@ export default function IssueNowCard({ title, desc, btnLink, btnText }: Props) {
       component={Link}
       position={'relative'}
       href={btnLink}
+      data-testid="issue-now-card"
       sx={{
         p: 2,
         boxShadow: 'none',

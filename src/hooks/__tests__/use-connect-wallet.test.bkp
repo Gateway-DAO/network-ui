@@ -1,0 +1,79 @@
+import { Chain } from '@/services/protocol/types';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { renderHook, act, waitFor } from '@testing-library/react';
+import { useSignMessage } from 'wagmi';
+
+import useConnectWallet from '../use-connect-wallet';
+
+jest.mock('@solana/wallet-adapter-react', () => ({
+  useWallet: jest.fn(),
+}));
+jest.mock('wagmi');
+
+describe('useConnectWallet', () => {
+  const onGetNonce = jest.fn();
+  const onSignedMessage = jest.fn();
+  const statesHandler = {
+    onSigning: jest.fn(),
+    onLoading: jest.fn(),
+    onSuccess: jest.fn(),
+    onError: jest.fn(),
+    onPending: jest.fn(),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should connect wallet and call the necessary functions', async () => {
+    const wallet = 'exampleWallet';
+    const chain = Chain.Sol;
+    const nonce = 'exampleNonce';
+    const signature = 'exampleSignature';
+
+    const signMessageSolana = jest.fn().mockResolvedValue(signature);
+    const signMessageEvm = jest.fn().mockResolvedValue(signature);
+
+    (useWallet as jest.Mock).mockReturnValue({
+      signMessage: signMessageSolana,
+    });
+
+    (useSignMessage as jest.Mock).mockReturnValue({
+      signMessageAsync: signMessageEvm,
+    });
+
+    const { result } = renderHook(() =>
+      useConnectWallet({
+        onGetNonce,
+        onSignedMessage,
+        statesHandler,
+      })
+    );
+
+    expect(result.current.isLoading).toBe(false);
+
+    act(() => {
+      result.current.onConnect(wallet, chain);
+    });
+
+    expect(statesHandler.onSigning).toHaveBeenCalledTimes(1);
+    expect(onGetNonce).toHaveBeenCalledWith(wallet, chain);
+
+    await waitFor(() =>
+      expect(statesHandler.onLoading).toHaveBeenCalledTimes(1)
+    );
+
+    // expect(signMessageEvm).toHaveBeenCalledWith({ message: nonce });
+
+    // await waitFor(expect(connectWallet).toHaveBeenCalledWith({
+    //   signature,
+    //   wallet,
+    //   chain,
+    // }));
+
+    expect(statesHandler.onSuccess).toHaveBeenCalledTimes(1);
+    // expect(onDisconnectWallets).toHaveBeenCalledTimes(1);
+  });
+
+  // Add more test cases as needed
+});

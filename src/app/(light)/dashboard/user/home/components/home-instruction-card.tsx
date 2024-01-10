@@ -1,12 +1,14 @@
 'use client';
 
-import { Button, Paper, Stack, Typography, Link } from '@mui/material';
+import { useEffect, useState } from 'react';
 
-import CloseIcon from '@mui/icons-material/Close';
 import QuestionSquaredIcon from '@/components/icons/question-squared';
 import { useToggle } from '@react-hookz/web';
+
+import CloseIcon from '@mui/icons-material/Close';
+import { Button, Paper, Stack, Typography } from '@mui/material';
+
 import Instrunction from '../../../features/sidebar/instruction/instruction';
-import { useEffect, useState } from 'react';
 
 type Props = {
   title: string;
@@ -46,6 +48,7 @@ export default function HomeInstructionCard({
   return (
     <Paper
       variant={'outlined'}
+      data-testid="instructional-card"
       sx={{
         padding: 2,
         paddingLeft: 2,
@@ -64,7 +67,15 @@ export default function HomeInstructionCard({
           <Stack flexDirection={'column'} justifyContent={'space-between'}>
             <Stack flexDirection={'row'} justifyContent={'space-between'}>
               <QuestionSquaredIcon sx={{ width: 45, height: 40, mb: 2 }} />
-              <CloseIcon sx={{ mt: 1 }} onClick={handleClick} />
+              <CloseIcon
+                sx={{
+                  mt: 1,
+                  '&:hover': {
+                    cursor: 'pointer',
+                  },
+                }}
+                onClick={handleClick}
+              />
             </Stack>
             <Stack>
               <Typography mt={2} variant="h5" width={300} gutterBottom>
@@ -89,6 +100,7 @@ export default function HomeInstructionCard({
             </Stack>
           </Stack>
           <Instrunction
+            data-testid="instructional-card__dialog"
             description={description}
             title={title}
             link={link}

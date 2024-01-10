@@ -30,6 +30,7 @@ export default function HomeCard({
       href={link}
       target={target}
       variant="outlined"
+      data-testid="home-card"
       sx={{
         padding: 2,
         paddingLeft: 2,
